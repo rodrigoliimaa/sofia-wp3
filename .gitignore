@@ -1,0 +1,9 @@
+# Nunca versionar dados de pacientes, credenciais ou documentos internos
+*.csv
+*.xlsx
+*.zip
+*.env
+secrets*
+*.pdf
+*.docx
+.DS_Store

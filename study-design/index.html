@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Study Design WP3 SOFIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: protocolo de pesquisa com índice fixo à esquerda; a sequência E1→E4 é o eixo visual da página. */
+:root {
+  --bg: #f5f8f8; --surface: #ffffff; --tint: #e5f0ef; --ink: #17292d; --ink-2: #4a5f64; --ink-3: #6b7f84;
+  --line: #d3dfe0; --accent: #0b6b63; --accent-ink: #ffffff; --warn-bg: #fbf1dc; --warn-line: #b7791f; --warn-ink: #6d4608;
+  --bad: #a93d2e; --good: #1d7a55;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1a1c; --surface: #162427; --tint: #1b3235; --ink: #e6efef; --ink-2: #aebfc1; --ink-3: #8a9ea1;
+  --line: #2b4044; --accent: #4fc2b4; --accent-ink: #08201e; --warn-bg: #2e2412; --warn-line: #d9a441; --warn-ink: #f0d9a8;
+  --bad: #ee8f7f; --good: #6cc9a0; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1a1c; --surface: #162427; --tint: #1b3235; --ink: #e6efef; --ink-2: #aebfc1; --ink-3: #8a9ea1;
+  --line: #2b4044; --accent: #4fc2b4; --accent-ink: #08201e; --warn-bg: #2e2412; --warn-line: #d9a441; --warn-ink: #f0d9a8;
+  --bad: #ee8f7f; --good: #6cc9a0; color-scheme: dark }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.6 var(--body); }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+strong { font-weight: 700; }
+code, .mono { font-family: var(--mono); font-size: .86em; }
+
+.shell { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: 56px;
+  padding-block: 48px 80px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+nav.index { position: sticky; top: calc(24px + env(safe-area-inset-top, 0px)); align-self: start; font-size: .94rem; }
+nav.index .tag { font: 500 .72rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 12px; }
+nav.index ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 1px solid var(--line); }
+nav.index a { display: block; padding: 5px 0 5px 14px; margin-left: -1px; border-left: 2px solid transparent; color: var(--ink-2); text-decoration: none; line-height: 1.3; }
+nav.index a:hover { color: var(--ink); }
+nav.index a.on { color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+
+main { min-width: 0; display: grid; gap: 64px; }
+section { min-width: 0; scroll-margin-top: 24px; display: grid; gap: 18px; }
+.prose { max-width: 68ch; }
+p { margin: 0; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.05; font-weight: 700; letter-spacing: -.02em; }
+h2 { font-size: 1.75rem; line-height: 1.15; font-weight: 700; letter-spacing: -.01em; }
+h3 { font-size: 1.22rem; line-height: 1.25; font-weight: 700; }
+.eyebrow { font: 500 .75rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.meta { color: var(--ink-3); font-size: .95rem; }
+.note { color: var(--ink-3); font-size: .9rem; line-height: 1.45; max-width: 75ch; }
+
+header.top { display: grid; gap: 14px; }
+
+/* Sequência dos estudos */
+.seq { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 6px; align-content: start; text-decoration: none; color: inherit; }
+.step:hover { border-color: var(--accent); }
+.step.core { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.step .code { font: 500 .78rem var(--mono); letter-spacing: .04em; }
+.step b { font: 700 1.08rem/1.2 var(--display); }
+.step span.d { font-size: .92rem; line-height: 1.35; }
+.step .when { font: 500 .72rem var(--mono); letter-spacing: .03em; margin-top: 6px; opacity: .85; }
+
+.why { font-size: 1.14rem; line-height: 1.5; max-width: 62ch; }
+
+/* Tabelas */
+.tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .96rem; line-height: 1.42; }
+th, td { text-align: left; vertical-align: top; padding: 11px 14px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+thead th { font: 500 .74rem var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); background: var(--tint); white-space: nowrap; }
+td.n, th.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.find td:first-child { font-weight: 600; width: 22%; min-width: 150px; }
+.find td:nth-child(2) { width: 33%; min-width: 210px; }
+.find td:nth-child(3) { min-width: 240px; }
+.tag-bug { display: inline-block; font: 500 .68rem var(--mono); letter-spacing: .03em; color: var(--bad); border: 1px solid currentColor; border-radius: 3px; padding: 0 5px; margin-left: 4px; white-space: nowrap; vertical-align: 1px; }
+
+/* Gráfico */
+figure { margin: 0; display: grid; gap: 10px; }
+figcaption { order: -1; }
+figcaption strong { display: block; font-family: var(--display); font-size: 1.08rem; }
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: grid; gap: 9px; }
+.bar-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; align-items: center; position: relative; border-radius: 3px; }
+.bar-row .lab { font-size: .94rem; line-height: 1.2; }
+.bar-track { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.bar { height: 16px; background: var(--accent); border-radius: 0 4px 4px 0; flex: none; }
+.bar.zero { width: 2px !important; background: var(--bad); border-radius: 0; }
+.val { font: 500 .82rem var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.val small { font: 400 .78rem var(--mono); color: var(--ink-3); margin-left: 6px; }
+.bar-row:hover { background: var(--tint); }
+
+/* Definição do desfecho e estudos */
+.spec { display: grid; grid-template-columns: 170px minmax(0, 1fr); border: 1px solid var(--line); border-radius: 6px; background: var(--surface); overflow: hidden; }
+.spec > dt, .spec > dd { margin: 0; padding: 12px 14px; border-bottom: 1px solid var(--line); line-height: 1.45; font-size: .98rem; }
+.spec > dt { font-weight: 700; background: var(--tint); font-size: .93rem; }
+.spec > dt:nth-last-child(2), .spec > dd:last-child { border-bottom: 0; }
+.spec ul { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 6px; }
+.rq { font: 500 .78rem var(--mono); color: var(--accent); margin-right: 4px; }
+
+.journey { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.journey > div { padding: 14px; display: grid; gap: 4px; align-content: start; border-right: 1px solid var(--line); font-size: .95rem; line-height: 1.35; }
+.journey > div:last-child { border-right: 0; }
+.journey .t { font: 500 .74rem var(--mono); color: var(--ink-3); letter-spacing: .04em; }
+.journey b { font-family: var(--display); }
+.journey .src { font: 400 .8rem var(--mono); color: var(--ink-2); margin-top: 6px; }
+.journey .hot { background: var(--accent); color: var(--accent-ink); }
+.journey .hot .t, .journey .hot .src { color: var(--accent-ink); }
+
+.study { display: grid; gap: 14px; padding-top: 26px; border-top: 1px solid var(--line); }
+.study:first-of-type { border-top: 0; padding-top: 0; }
+.study-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: baseline; }
+.badge { font: 500 .72rem var(--mono); letter-spacing: .03em; border: 1px solid var(--accent); color: var(--accent); border-radius: 3px; padding: 1px 7px; }
+
+.alert { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 6px; padding: 16px 18px; display: grid; gap: 10px; color: var(--warn-ink); font-size: 1rem; line-height: 1.5; }
+.alert h4 { margin: 0; font: 700 1.02rem var(--display); }
+
+.verdict { font-weight: 600; white-space: nowrap; }
+.verdict.go { color: var(--good); }
+.verdict.no { color: var(--ink-3); font-weight: 400; white-space: normal; }
+
+/* Fluxo de linkage */
+.flow { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1.2fr) 28px minmax(0, 1fr); align-items: stretch; gap: 6px; }
+.fbox { border: 1px solid var(--line); border-radius: 6px; background: var(--surface); padding: 14px; display: grid; gap: 6px; align-content: start; font-size: .95rem; line-height: 1.38; }
+.fbox b { font-family: var(--display); }
+.fbox.key { background: var(--tint); border-color: var(--accent); }
+.fbox .small { color: var(--ink-2); font-size: .88rem; }
+.arrow { display: grid; place-items: center; color: var(--ink-3); font-size: 1.25rem; }
+
+ol.steps { margin: 0; padding-left: 1.3em; display: grid; gap: 10px; max-width: 70ch; }
+ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 9px; max-width: 72ch; }
+ul.src-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 24px; font-size: .92rem; }
+
+
+/* Catálogo */
+.axis { display: grid; gap: 8px; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.fbtn { font: 500 .86rem var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 5px 10px; cursor: pointer; }
+.fbtn:hover { border-color: var(--accent); }
+.fbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fbtn.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.fbtn .c { font: 500 .76rem var(--mono); margin-left: 3px; }
+table.poss { min-width: 760px; }
+table.poss td { font-size: .93rem; }
+.q { color: var(--ink-2); font-size: .9rem; line-height: 1.35; }
+.q.block { display: block; margin-top: 3px; }
+.acc { font: 500 .74rem var(--mono); color: var(--ink-2); white-space: nowrap; }
+.st { display: inline-block; font-weight: 700; font-size: .88rem; white-space: nowrap; }
+.st::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 6px; vertical-align: 1px; border: 2px solid currentColor; border-radius: 50%; }
+.st-agora { color: var(--good); } .st-agora::before { background: currentColor; }
+.st-par { color: var(--accent); } .st-par::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
+.st-dep { color: var(--ink-2); }
+.st-fut { color: var(--ink-3); } .st-fut::before { border-style: dotted; }
+.st-nao { color: var(--bad); } .st-nao::before { border-radius: 0; height: 2px; border-width: 1px; background: currentColor; vertical-align: 4px; }
+.axis[hidden] { display: none; }
+.diagram { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: #f5f8f8; }
+.diagram img { display: block; width: 100%; min-width: 1000px; height: auto; }
+
+@media (max-width: 960px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 28px 56px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  nav.index { position: static; }
+  nav.index ol { border-left: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  nav.index a { border: 1px solid var(--line); border-radius: 4px; padding: 4px 9px; margin: 0; font-size: .88rem; background: var(--surface); }
+  nav.index a.on { border-color: var(--accent); }
+  main { gap: 48px; }
+  .seq { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  ul.src-list { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 620px) {
+  .seq, .journey { grid-template-columns: minmax(0, 1fr); }
+  .journey > div { border-right: 0; border-bottom: 1px solid var(--line); }
+  .journey > div:last-child { border-bottom: 0; }
+  .spec { grid-template-columns: minmax(0, 1fr); }
+  .spec > dt { border-bottom: 0; padding-bottom: 4px; }
+  .spec > dt:nth-last-child(2) { border-bottom: 0; }
+  .flow { grid-template-columns: minmax(0, 1fr); }
+  .arrow { transform: rotate(90deg); height: 20px; }
+  .bar-row { grid-template-columns: 112px minmax(0, 1fr); gap: 8px; }
+  .val small { display: none; }
+}
+</style>
+
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="index" aria-label="Índice">
+    <p class="tag"><a href="../" style="color:inherit;text-decoration:none">← Rede SOFIA · WP3</a></p>
+    <ol>
+      <li><a href="#proposta">Proposta</a></li>
+      <li><a href="#diagrama">Design em uma imagem</a></li>
+      <li><a href="#sofia">1. Objetivo do SOFIA</a></li>
+      <li><a href="#anteriores">2. Trabalhos anteriores</a></li>
+      <li><a href="#dados">3. O que os dados sustentam</a></li>
+      <li><a href="#desfecho">4. Desfecho central</a></li>
+      <li><a href="#estudos">5. Estudos recomendados</a></li>
+      <li><a href="#bases">6. Bases abertas</a></li>
+      <li><a href="#possibilidades">7. Todas as possibilidades</a></li>
+      <li><a href="#linkage">8. Linkage e CEP</a></li>
+      <li><a href="#metodo">9. Regras de método</a></li>
+      <li><a href="#decisoes">10. Decisões</a></li>
+      <li><a href="#aberto">11. Pontos em aberto</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="proposta">
+      <header class="top">
+        <span class="eyebrow">Proposta para discussão</span>
+        <h1>Study design do WP3</h1>
+        <p class="meta">Rodrigo dos Santos Lima · 5 de novembro de 2026 · Fontes: reunião de 29/10, dataset GESTAR anonimizado, planilha de features e reuniões de outubro</p>
+      </header>
+      <p class="why">Recomendo trocar o artigo único por <strong>três estudos em sequência</strong>, com a contrarreferência como desfecho central e sem prometer modelo antes de medir o desfecho. Um estudo prospectivo com TCLE entra depois.</p>
+      <div class="seq">
+        <a class="step core" href="#e1"><span class="code">E1 · NÚCLEO</span><b>Linkage em Rio Largo</b><span class="d">Liga GESTAR, PEC e AGHU para medir se a gestante de alto risco volta à atenção básica.</span><span class="when">Fazer primeiro</span></a>
+        <a class="step" href="#e2"><span class="code">E2 · ESCALA</span><b>SINASC + SIM</b><span class="d">Valida o pipeline e prevê pré-natal inadequado em base populacional.</span><span class="when">Em paralelo</span></a>
+        <a class="step" href="#e3"><span class="code">E3 · DOENÇAS</span><b>Predição precoce</b><span class="d">Trabalho da Rebeca: ML versus pontuação, com rótulo de CID hospitalar.</span><span class="when">Depende do AGHU</span></a>
+        <a class="step" href="#e4"><span class="code">E4 · PROSPECTIVO</span><b>Coorte com TCLE</b><span class="d">Coleta o que nenhuma base tem, com o desfecho já validado.</span><span class="when">Depois de E1</span></a>
+      </div>
+      <p class="prose">O motivo é o que os dados mostram: hoje o GESTAR não mede evasão nem contrarreferência, e nenhum desfecho clínico tem eventos suficientes para treinar modelo. Além desses quatro, a <a href="#possibilidades">seção 7</a> lista todas as outras frentes que podemos explorar, cada uma com dados, acesso e parecer.</p>
+    </section>
+
+    <section id="diagrama">
+      <span class="eyebrow">Visão geral</span>
+      <h2>O design em uma imagem</h2>
+      <p class="prose">As quatro trilhas que funcionam, dos dados até a entrega do mês 18. <a href="diagrama.png" target="_blank" rel="noopener">Abrir a imagem em tamanho original</a>.</p>
+      <div class="diagram"><img src="diagrama.png" alt="Diagrama do study design do WP3. Quatro trilhas vão de dados, preparo e estudo até o que produzem e o que vem depois: contrarreferência com E1 em Rio Largo, vigilância por regras, doenças gestacionais com E3 e base populacional com E2. Todas convergem para a entrega P4 v1.0 no mês 18."></div>
+    </section>
+
+    <section id="sofia">
+      <span class="eyebrow">Seção 1</span>
+      <h2>O que o SOFIA pede do WP3</h2>
+      <p class="prose">A Rede SOFIA propõe uma infraestrutura federada de dados e IA para saúde materno-infantil, para atacar “a fragmentação e o subaproveitamento dos dados clínicos, epidemiológicos e socioeconômicos”. São oito WPs, seis datasets (D1 a D6) e 24 meses. O WP3 reúne séries temporais e registros estruturados do NTS-AL e da SESAU, com interoperabilidade com e-SUS, RNDS e AGHU.</p>
+      <div class="alert">
+        <h4>Isso responde à dúvida da reunião sobre o foco do projeto</h4>
+        <p>A proposta da Etapa 1 que deu origem à frente de Alagoas é a <strong>15545, “Telessaúde Alagoas Inteligente: Sistema Inteligente de Contrarreferência para Gestantes de Risco Integrado à RNDS”</strong>. A minuta atribui ao NTS-AL “monitorar a contrarreferência de gestantes de risco” e pede ao WP3 agentes “para vigilância e contrarreferência”. O foco não está em aberto: é a contrarreferência.</p>
+      </div>
+      <h3>Como os estudos cobrem a entrega do WP3</h3>
+      <p class="prose">A entrega P4 sai em versões trimestrais, com a versão final (P4 v1.0) no mês 18. Ela tem quatro itens.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Item do P4 v1.0</th><th>O que entrega</th><th>Situação com esta proposta</th></tr></thead>
+        <tbody>
+          <tr><td>Feature store validada</td><td>D1 e D2 da <a href="#possibilidades">seção 7</a>, alimentadas por E1</td><td>Viável. Depende do acesso a PEC e AGHU.</td></tr>
+          <tr><td>API em HL7 FHIR</td><td>D2 e D3, junto com o WP6</td><td>Viável. RNDS já em homologação.</td></tr>
+          <tr><td>Agentes LLM e preditivos operacionais</td><td>D7 (RAG), A6 (vigilância por regras) e modelo só se E1 der volume</td><td><strong>Ponto de atenção:</strong> pode não haver modelo validado de não retorno até o mês 18. Alinhar com a coordenação o que conta como agente preditivo operacional.</td></tr>
+          <tr><td>Frontend de vigilância e contrarreferência</td><td>A6 + WP8</td><td>Viável, usando as regras de A6 antes do modelo.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Quem mais está envolvido</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Parte</th><th>Papel na minuta</th><th>Consequência para o WP3</th></tr></thead>
+        <tbody>
+          <tr><td><strong>WP1 / D1</strong> (UFRN e UFC)</td><td>Consolida SISPRENATAL, SINAN, SINASC e SIM com IBGE e CADU; pipelines ETL, camadas silver e gold, indicadores territoriais</td><td><strong>A exploração de bases públicas decidida em 29/10 pode duplicar o trabalho do WP1.</strong> Conversar com eles antes de baixar qualquer coisa e pedir o que já existe.</td></tr>
+          <tr><td>WP2 (UFRJ)</td><td>Gestantes transplantadas, adesão terapêutica</td><td>Alinhar definições de adesão; o dataset é muito específico.</td></tr>
+          <tr><td>WP6, WP7, WP8</td><td>Acesso federado, agentes, frontend</td><td>Regra do kickoff: o WP3 só fecha quando os dados circulam por eles.</td></tr>
+          <tr><td>Agentes LLM</td><td>Previstos “apenas nos WPs 1 e 3”, com RAG</td><td>LLM é compromisso do projeto, então a RQ da reunião tem lugar garantido.</td></tr>
+          <tr><td>Outras propostas do cluster</td><td>15579 PLADIS (pré-natal no Nordeste), 15665 (transmissão vertical com RAG), 15611 GESTPLANTE, NEUROSUS</td><td>PLADIS e 15665 têm sobreposição de tema. Vale saber o que já produziram.</td></tr>
+          <tr><td>SESAU, HU/UFAL (RUTE), Fiocruz, Unicamp/CAISM, UFPI</td><td>Colaboração, <strong>não são partícipes formais</strong></td><td>Uso de dados deles exige autorização ou instrumento próprio (<a href="#linkage">seção 8</a>). Fiocruz é uma ponte possível para o CIDACS.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="anteriores">
+      <span class="eyebrow">Seção 2</span>
+      <h2>O que já foi feito e como aproveitar</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Trabalho</th><th>O que deixou</th><th>Como entra aqui</th></tr></thead>
+        <tbody>
+          <tr><td>Kickoff WP3 (Sprint 1)</td><td>Missão: integrar, padronizar, estruturar, ativar. Riscos já previam dados insuficientes e atraso ético</td><td>Mantido como referência. Os riscos previstos se confirmaram.</td></tr>
+          <tr><td>Revisão de artigos e deck de study design (08/10)</td><td>Comparativo de cinco artigos e pipeline proposto</td><td>Mantida a lógica de transições. SMOTE, acurácia e 10-fold saem (<a href="#metodo">seção 9</a>), e há números a corrigir.</td></tr>
+          <tr><td>Planilha de features</td><td>95 features, 81 no GESTAR (85,3%), 14 lacunas com fonte sugerida</td><td>Base do mapeamento em AGHU e PEC. “Presente” ainda não mede preenchimento (RQ3 de E1).</td></tr>
+          <tr><td>Auditoria exploratória (slides da Lara)</td><td>Target sem validade, censura (787 de 1.011 ativas com última triagem até 27 semanas), 20 divergências de <code>pregnancy_id</code>, 61 pré-cadastros com placeholder</td><td>Foi o trabalho que mudou o rumo. Vira a base de D1, somada aos dois erros novos da seção 3.</td></tr>
+          <tr><td>Matriz de revisão da literatura (Lara)</td><td>Ramos, Mlandu e Noor extraídos em detalhe, com dicionário de variáveis</td><td>Fonte das variáveis do SINASC para E2. Corrige dados do deck.</td></tr>
+          <tr><td>Dicionário e dataset anonimizado</td><td>188 variáveis em 4 arquivos</td><td>Útil para exploração. Faltam a data de corte e as observações, e o README precisa de ajustes.</td></tr>
+          <tr><td>Rascunho do artigo de evasão</td><td>Estrutura LaTeX com dados mocados</td><td>Pausado. A estrutura pode ser reaproveitada; números e target, não.</td></tr>
+          <tr><td>Integrações PEC e RNDS (26/10)</td><td>PEC de Rio Largo validado, Branquinha a testar; RNDS homologada</td><td>Viabilizam E1 e D3.</td></tr>
+          <tr><td>Conectores e indicadores do projeto de UBS (21/10 e 04/11)</td><td>Conectores de IBGE e IPEA, tipologia rural/urbana, eixos de acesso</td><td>Podem servir a C5, se o outro projeto permitir o reúso (confirmar).</td></tr>
+        </tbody>
+      </table></div>
+      <h3>O que a literatura do acervo sugere</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Trabalho</th><th>Dados e desfecho</th><th>Lição para nós</th></tr></thead>
+        <tbody>
+          <tr><td>Ramos et al., 2025</td><td>8,8 milhões de nascimentos, SINASC + SIM + CNES, óbito neonatal evitável</td><td>Mostra que é possível vincular SIM e SINASC por <code>NUMERODN</code>, e traz avaliação de equidade. Modelo para C2.</td></tr>
+          <tr><td>Mlandu et al., 2023</td><td>21.641 mulheres, DHS de 3 países, dropout por etapa</td><td>Modelar por transição. Dados de inquérito, e a etapa pós-natal é a mais frágil.</td></tr>
+          <tr><td>Noor et al., 2026</td><td>5.128 mulheres, DHS de Bangladesh, continuum completo</td><td>Definição composta de continuum (A4). Reporta calibração.</td></tr>
+          <tr><td>Yoseph et al., 2026</td><td>3.855 gestantes, coorte com prontuários, &lt;8 consultas</td><td>Relacionar perda de seguimento a desfecho (A11). Tem o seguimento completo que nos falta.</td></tr>
+          <tr><td>Dalal 2022; Khetan 2026</td><td>Qualitativo e revisão de escopo sobre encaminhamento</td><td>Encaminhar não garante comparecer, e o agente comunitário é decisivo. Base para A3 e A8.</td></tr>
+          <tr><td>Learning to Call; Bayesian Bandits</td><td>Ensaios de chamadas a gestantes</td><td>Otimizar a busca ativa quando já houver predição (A9).</td></tr>
+          <tr><td>Preterm Birth: Stable Rules</td><td>Regras interpretáveis para prematuridade</td><td>Caminho para um escore simples no lugar de um modelo opaco (B2).</td></tr>
+          <tr><td>Balanceamento em prematuridade (PLOS ONE, 2025)</td><td>SMOTE, ADASYN e subamostragem no SUS</td><td>Ler junto com van den Goorbergh antes de decidir sobre reamostragem.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Li a matriz e os decks por inteiro, mas não reli cada PDF do acervo; as linhas de Learning to Call, Stable Rules e Balanceamento se apoiam na descrição de <code>bibliografia_recomendada.md</code>.</p>
+    </section>
+
+    <section id="dados">
+      <span class="eyebrow">Seção 3</span>
+      <h2>O que os dados sustentam hoje</h2>
+      <p class="prose">Analisei os quatro arquivos do dataset anonimizado: 1.113 gestantes, 1.859 triagens e 188 partos. Alguns resultados mudam o desenho, e dois deles são defeitos da nossa própria base.</p>
+      <div class="tw"><table class="find">
+        <thead><tr><th>Achado</th><th>Número</th><th>Consequência para o desenho</th></tr></thead>
+        <tbody>
+          <tr><td>Target “evasão &lt;8 consultas”</td><td>1.109 de 1.113 (99,6%) são evasão; &lt;6 consultas: 1.087 (97,7%)</td><td>Sem variação, não há o que prever (a auditoria da Lara já apontou isso). <strong>Target descartado</strong>, e os resultados do artigo não têm base (a reunião de 22/10 já os registrou como dados mocados).</td></tr>
+          <tr><td>O que é uma “consulta”</td><td>100% das 1.859 linhas têm <code>tipo_atendimento = TRIAGEM</code>; 64,2% das gestantes têm 0 ou 1 registro</td><td>O GESTAR conta triagens, não pré-natal. Contar consultas de verdade exige o PEC.</td></tr>
+          <tr><td>Seguimento censurado</td><td>Idade gestacional mediana na última triagem: 14 semanas; 855 de 1.091 abaixo de 27 semanas</td><td>Qualquer target binário fechado confunde “ainda grávida” com “perdida”. Precisa de análise de tempo até o evento.</td></tr>
+          <tr><td>Eventos adversos</td><td>Prematuro 14, baixo peso 11, UTI neonatal 7, óbito neonatal 1, óbito materno 1</td><td>Muito abaixo do mínimo para qualquer modelo (tabela de tamanho amostral abaixo).</td></tr>
+          <tr><td>Apgar 5 min = 0 <span class="tag-bug">erro na base</span></td><td>27 de 188; 26 deles sem óbito registrado</td><td>Provável campo vazio gravado como 0. A “asfixia” cai de 34 para 7 sem esses casos. Corrigir no dataset.</td></tr>
+          <tr><td><code>rf_pre_eclampsia</code> <span class="tag-bug">erro na base</span></td><td>110 gestantes, das quais 70 só pelo risco da calculadora Barcelona; diagnóstico HG/PE: 40</td><td><strong>A coluna mistura risco com doença</strong>, erro da nossa geração do dataset. Não usar como rótulo.</td></tr>
+          <tr><td>Doença incidente</td><td>HG/PE: 9 surgem após a 1ª triagem; diabetes: 14 de 70</td><td>Os demais casos já estavam marcados na 1ª triagem. Prever esses casos seria data leakage, e os incidentes são poucos demais.</td></tr>
+          <tr><td>Calculadora Barcelona</td><td>Baseline: 605 não avaliadas (54%), 364 ausente, 110 baixo, 34 alto</td><td>Guardamos só o resultado, não as entradas. Comparação possível só no subgrupo avaliado.</td></tr>
+          <tr><td>Atraso de retorno</td><td><code>dias_atraso_retorno_agendado</code> preenchido em 9 de 1.859 linhas</td><td>A feature “velocidade de adesão” do deck de outubro não existe na prática.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">A reunião citou ~1.184 gestantes e 27 desfechos; a diferença para 1.113 e 188 ainda precisa ser conciliada. O número 27 coincide com os 27 casos de Apgar = 0, mas não confirmei relação.</p>
+
+      <figure>
+        <figcaption><strong>Gestantes com parto registrado, por município</strong><span class="note">Percentual e contagem (partos / gestantes). Total: 188 de 1.113 (16,9%).</span></figcaption>
+        <div class="chart" role="img" aria-label="Parto registrado por município: Porto Calvo 46,2%, São Luís do Quitunde 36,4%, Branquinha 34,6%, Rio Largo 22,9%, Penedo 5,6%, União dos Palmares 0%, Maragogi 0%.">
+          <div class="bar-row" title="Porto Calvo: 72 partos em 156 gestantes"><span class="lab">Porto Calvo</span><span class="bar-track"><span class="bar" style="width:calc((100% - 130px) * .924)"></span><span class="val">46,2%<small>72/156</small></span></span></div>
+          <div class="bar-row" title="São Luís do Quitunde: 8 partos em 22 gestantes"><span class="lab">São Luís do Quitunde</span><span class="bar-track"><span class="bar" style="width:calc((100% - 130px) * .728)"></span><span class="val">36,4%<small>8/22</small></span></span></div>
+          <div class="bar-row" title="Branquinha: 44 partos em 127 gestantes"><span class="lab">Branquinha</span><span class="bar-track"><span class="bar" style="width:calc((100% - 130px) * .692)"></span><span class="val">34,6%<small>44/127</small></span></span></div>
+          <div class="bar-row" title="Rio Largo: 40 partos em 175 gestantes"><span class="lab">Rio Largo</span><span class="bar-track"><span class="bar" style="width:calc((100% - 130px) * .458)"></span><span class="val">22,9%<small>40/175</small></span></span></div>
+          <div class="bar-row" title="Penedo: 24 partos em 431 gestantes"><span class="lab">Penedo</span><span class="bar-track"><span class="bar" style="width:calc((100% - 130px) * .112)"></span><span class="val">5,6%<small>24/431</small></span></span></div>
+          <div class="bar-row" title="União dos Palmares: 0 partos em 181 gestantes"><span class="lab">União dos Palmares</span><span class="bar-track"><span class="bar zero"></span><span class="val">0%<small>0/181</small></span></span></div>
+          <div class="bar-row" title="Maragogi: 0 partos em 21 gestantes"><span class="lab">Maragogi</span><span class="bar-track"><span class="bar zero"></span><span class="val">0%<small>0/21</small></span></span></div>
+        </div>
+      </figure>
+      <p class="prose">A falta de desfecho <strong>não é aleatória</strong>: varia por município. Comparar desfechos entre municípios mediria a prática de registro, não risco.</p>
+
+      <h3>Quantos dados cada modelo exigiria</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Desfecho (prevalência)</th><th class="n">Parâmetros</th><th class="n">N mínimo</th><th class="n">Eventos mínimos</th><th class="n">Eventos hoje</th></tr></thead>
+        <tbody>
+          <tr><td>Parto prematuro (7,4%, entre partos)</td><td class="n">10 / 20</td><td class="n">1.408 / 2.816</td><td class="n">105 / 210</td><td class="n"><strong>14</strong></td></tr>
+          <tr><td>Baixo peso (5,9%, entre partos)</td><td class="n">10 / 20</td><td class="n">1.618 / 3.236</td><td class="n">95 / 190</td><td class="n"><strong>11</strong></td></tr>
+          <tr><td>HG/pré-eclâmpsia (3,6%)</td><td class="n">10 / 20</td><td class="n">2.203 / 4.406</td><td class="n">80 / 159</td><td class="n"><strong>40</strong> (9 incidentes)</td></tr>
+          <tr><td>Perda na contrarreferência (30%, <strong>hipótese</strong>)</td><td class="n">5 / 10 / 20</td><td class="n">400 / 800 / 1.600</td><td class="n">120 / 240 / 480</td><td class="n">Não medido</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Critérios de Riley et al. (mesma lógica do pacote pmsampsize), com R² de Nagelkerke 0,15 e shrinkage 0,9. O R² e a taxa de 30% são suposições minhas; a taxa real é justamente o que E1 mede. Parâmetro não é o mesmo que variável: variáveis categóricas e termos não lineares consomem mais de um.</p>
+      <p class="prose">Isso confirma em números o que a reunião concluiu: esperar as gestantes atuais terminarem não resolve. Os 392 casos de alto risco do GESTAR dariam, no máximo, um modelo enxuto de cerca de 5 parâmetros para a contrarreferência, e só se todos os municípios fossem ligados ao PEC.</p>
+    </section>
+
+    <section id="desfecho">
+      <span class="eyebrow">Seção 4</span>
+      <h2>O desfecho central: contrarreferência computável</h2>
+      <p class="prose">O objetivo reafirmado na reunião foi estimar a chance de a gestante se perder ao voltar para a atenção básica. A dúvida entre continuidade e desfecho clínico voltou porque esse objetivo nunca foi escrito como regra que um banco de dados consiga calcular. Proposta de definição, a validar com a equipe clínica:</p>
+      <dl class="spec">
+        <dt>Evento índice</dt><dd>Primeira saída do hospital de referência em cada gestação: alta de internação obstétrica ou último atendimento ambulatorial de alto risco (AGHU).</dd>
+        <dt>Desfecho</dt><dd>Primeiro contato assistencial qualificado na APS registrado no PEC: atendimento individual ou visita domiciliar. <strong>Janelas:</strong> 30 dias durante a gestação (coerente com a régua de 30 dias do GESTAR) e 42 dias após o parto (puerpério).</dd>
+        <dt>Eventos competitivos</dt><dd>Parto, perda gestacional, óbito e nova internação, contados separadamente e nunca como perda.</dd>
+        <dt>Censura</dt><dd>Mudança de município ou fim da extração de dados. Exige guardar a data de corte de cada fonte.</dd>
+        <dt>Ponto de predição</dt><dd>Na data do evento índice. Só entram preditores anteriores a ela.</dd>
+      </dl>
+      <h3>As transições da jornada</h3>
+      <p class="prose">A jornada segue a lógica de transições de Mlandu et al. (2023), e cada transição tem uma fonte diferente. Só um município com acesso às três fontes permite enxergar o ciclo completo.</p>
+      <div class="journey">
+        <div><span class="t">T1</span><b>Encaminhamento</b><span>APS identifica alto risco</span><span class="src">GESTAR + regulação</span></div>
+        <div><span class="t">T2</span><b>Chegada</b><span>Gestante é atendida no hospital</span><span class="src">AGHU</span></div>
+        <div class="hot"><span class="t">T3 · DESFECHO PRINCIPAL</span><b>Retorno</b><span>Volta à APS após a saída</span><span class="src">AGHU → PEC</span></div>
+        <div><span class="t">T4</span><b>Puerpério</b><span>Consulta em até 42 dias</span><span class="src">SINASC/AGHU → PEC</span></div>
+      </div>
+    </section>
+
+    <section id="estudos">
+      <span class="eyebrow">Seção 5</span>
+      <h2>Os quatro estudos recomendados</h2>
+
+      <div class="study" id="e1">
+        <div class="study-head"><h3>E1. Coorte de linkage em Rio Largo</h3><span class="badge">Núcleo · fazer primeiro</span></div>
+        <p class="prose"><strong>Por que Rio Largo:</strong> é o único município em que, segundo a reunião, temos PEC acessível (validado em 26/10) e referência para o próprio hospital (a confirmar no PDF de estratificação). A estimativa mencionada foi de 10 a 20 gestantes; o dataset tem <strong>78 de alto risco</strong>, das quais 38 com 2 ou mais triagens e 24 com parto registrado. Branquinha é a extensão natural (42 de alto risco; acesso ao PEC ainda a testar).</p>
+        <dl class="spec">
+          <dt>Perguntas</dt><dd><ul><li><span class="rq">RQ1</span>Que fração das gestantes de alto risco do GESTAR é encontrada no PEC e no AGHU?</li><li><span class="rq">RQ2</span>Qual a incidência cumulativa de retorno à APS em 30 e 42 dias?</li><li><span class="rq">RQ3</span>Quais features da planilha estão de fato preenchidas em cada base?</li></ul></dd>
+          <dt>Desenho</dt><dd>Coorte retrospectiva de linkage determinístico (CPF/CNS, com auditoria manual da amostra). Primeiro as 78; depois, a extensão.</dd>
+          <dt>Análise</dt><dd>Taxas de linkage com IC 95%, incidência cumulativa com competing risks (Aalen-Johansen), completude por variável. <strong>Sem ML:</strong> com esse n, nenhum modelo se sustenta.</dd>
+          <dt>Produto</dt><dd>O protocolo que o professor pediu (definir a metodologia mesmo com poucas gestantes), a taxa real que alimenta o cálculo amostral e um artigo metodológico. O modelo preditivo só vem depois, na escala que o resultado indicar.</dd>
+          <dt>Critério de avanço</dt><dd>Sugestão para discutir: linkage acima de 80%, desfecho calculável em mais de 80% dos ligados e auditoria sem erro sistemático.</dd>
+          <dt>Riscos</dt><dd>Atendimento fora do PEC parece perda (auditar amostra com a UBS). A RNDS pode não devolver tudo o que o banco do PEC tem, então a extensão pode exigir acesso via convênio. Acesso ao AGHU e base legal do vínculo seguem em aberto desde 22/10.</dd>
+        </dl>
+      </div>
+
+      <div class="study" id="e2">
+        <div class="study-head"><h3>E2. Pré-natal inadequado em base populacional</h3><span class="badge">SINASC + SIM · em paralelo</span></div>
+        <p class="prose">Responde à ideia discutida de validar a metodologia em base pública. <strong>Limitação importante:</strong> o SINASC tem um registro por nascimento, sem histórico entre atendimentos. Ele <strong>não mede continuidade</strong>, como já se havia percebido na reunião. Serve para outra pergunta, útil por si só. Convém combinar com o WP1, que já tem essas bases no escopo.</p>
+        <dl class="spec">
+          <dt>Pergunta</dt><dd>Com o que se sabe no início do pré-natal, é possível prever quem terá pré-natal inadequado (índice de Kotelchuck) e desfecho neonatal adverso em Alagoas?</dd>
+          <dt>Dados</dt><dd>SINASC de Alagoas, várias coortes de nascimento (dezenas de milhares por ano; confirmar no TabNet). Óbito neonatal via SIM, ligado por <code>NUMERODN</code> como em Ramos et al. (conferir se o campo vem nos arquivos abertos). Contexto municipal de IBGE, IPEA e MDS.</dd>
+          <dt>Cuidado principal</dt><dd>Usar só preditores conhecidos no início: idade, escolaridade, raça/cor, paridade, perdas, município, mês de início. <strong>Número de consultas é data leakage</strong> e não pode entrar como preditor. Diferente da simples contagem de consultas, o Kotelchuck considera a duração da gestação.</dd>
+          <dt>Validação</dt><dd>Divisão temporal e por macrorregião. Depois, aplicar o modelo às gestantes de E1 usando só as variáveis comuns e comparar com as consultas reais do PEC.</dd>
+          <dt>Limites</dt><dd>Só nascidos vivos (viés de seleção). Um estudo em Campinas encontrou baixa confiabilidade no número de consultas. Ramos et al. (2025) já exploraram a base nacional, então a contribuição precisa ser o recorte regional, a predição no início do pré-natal e a transposição para o GESTAR.</dd>
+          <dt>Vantagem</dt><dd>Pode começar já e gera o pipeline, as métricas e o baseline. Dados públicos, provavelmente sem exigência de CEP (confirmar).</dd>
+        </dl>
+        <p class="prose"><strong>IBGE e IPEA entram como contexto do município ou território, não da pessoa.</strong> Bolsa Família individual só vem do cadastro do cidadão no PEC.</p>
+      </div>
+
+      <div class="study" id="e3">
+        <div class="study-head"><h3>E3. Predição precoce de doenças gestacionais</h3><span class="badge">Rebeca · depende do AGHU</span></div>
+        <dl class="spec">
+          <dt>Perguntas</dt><dd><ul><li><span class="rq">RQ1</span>Modelos de ML superam a pontuação do GESTAR na predição precoce das doenças mais prevalentes em Alagoas?</li><li><span class="rq">RQ2</span>No subgrupo avaliado, como se comparam com o resultado da calculadora Barcelona?</li><li><span class="rq">RQ3</span>LLMs acrescentam algo aos modelos clássicos?</li></ul></dd>
+          <dt>Rótulo</dt><dd>Pool de CIDs definido pela equipe clínica, vindo do <strong>AGHU e não dos checkboxes do GESTAR</strong>. CID não é obrigatório, então é preciso auditar uma amostra em prontuário.</dd>
+          <dt>Base</dt><dd>Avaliar a base anonimizada do AGHU citada em 22/10, com o GESTAR como validação externa. Selecionar doença com eventos suficientes usando a tabela de tamanho amostral. Base hospitalar concentra casos graves, e o modelo pode não se transferir para a APS.</dd>
+          <dt>Regras</dt><dd>Predição na 1ª triagem, só casos incidentes, sem usar exames posteriores ao ponto de predição.</dd>
+        </dl>
+        <div class="alert">
+          <h4>Dois alertas sobre a premissa da reunião</h4>
+          <p><strong>“ML supera a calculadora” pode não se sustentar.</strong> A busca rápida que fiz encontrou comparações contra o modelo FMF (não contra Barcelona) em que ML empatou ou ficou abaixo (PREVAL, coorte asiática, coorte romena). Esses modelos usam marcadores como PlGF e Doppler, que não guardamos. Falta localizar o paper citado na reunião. Sem esses marcadores, o que estaríamos testando é outra coisa: predição só com variáveis clínicas, o que pode ser útil para a APS, mas não substitui Barcelona.</p>
+          <p><strong>LLM em dado estruturado:</strong> a evidência encontrada favorece modelos clássicos, como o colega previu na reunião (há resultados contrários em estudos isolados). A pergunta mais promissora é usar LLM em <strong>texto livre</strong> (evoluções do PEC e observações do GESTAR) para extrair rótulos e variáveis ausentes. Isso exige modelo local ou contrato adequado: prontuário identificável não pode ir para API externa.</p>
+        </div>
+      </div>
+
+      <div class="study" id="e4">
+        <div class="study-head"><h3>E4. Coorte prospectiva com TCLE</h3><span class="badge">Depois de E1</span></div>
+        <p class="prose">Recrutar no hospital de referência, com consentimento, e captar o que nenhuma base tem: localização precisa, zona rural, transporte, escolaridade, contato e confirmação ativa do retorno. É a resposta mais robusta para a contrarreferência e permite também oferecer o TCLE às gestantes já cadastradas.</p>
+        <p class="prose">É também a mais lenta e depende de CEP e fluxo assistencial. Como o AGHU é somente leitura, a coleta exige um instrumento próprio ou apoio do setor, e vale envolver cedo a gerência de Atenção à Saúde e a chefia da obstetrícia, como sugerido na reunião. E1 entrega o desfecho validado e a taxa necessária para calcular o n.</p>
+      </div>
+    </section>
+
+    <section id="bases">
+      <span class="eyebrow">Seção 6</span>
+      <h2>Bases abertas: o que cada uma permite</h2>
+      <div class="alert">
+        <h4>A resposta para a pergunta da reunião</h4>
+        <p><strong>Nenhuma base aberta encontrada liga os vários atendimentos da mesma gestante.</strong> Elas têm um registro por evento e não trazem identificador pessoal, então não medem contrarreferência. Medem território, nascimento, óbito, internação e agregados. A exceção é o vínculo SIM–SINASC pelo número da declaração de nascido vivo, usado por Ramos et al.</p>
+      </div>
+      <div class="tw"><table class="poss">
+        <thead><tr><th>Base</th><th>O que traz</th><th>Nível</th><th>Uso aqui</th><th>Verificação</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SINASC</strong></td><td>Nascimento, mãe, consultas, mês de início, Kotelchuck, parto, Apgar, peso</td><td>Por nascimento</td><td>C1, C2, C3, C4, B7</td><td>Variáveis verificadas na matriz e na busca; Kotelchuck a validar no dicionário oficial</td></tr>
+          <tr><td><strong>SIM</strong></td><td>Óbitos, causa, óbito materno e infantil</td><td>Por óbito</td><td>C2</td><td>Microdados em CSV confirmados na página do MS</td></tr>
+          <tr><td><strong>SINAN</strong></td><td>Agravos: sífilis em gestante, sífilis congênita, HIV, outros</td><td>Anonimizado, até município</td><td>B6</td><td>Página do MS confirma abertura e nível municipal</td></tr>
+          <tr><td><strong>SISPRENATAL</strong></td><td>Acompanhamento de pré-natal</td><td>A conferir</td><td>Potencial para C1</td><td><strong>Não confirmei abertura.</strong> Citado na minuta para o WP1; perguntar a eles</td></tr>
+          <tr><td><strong>SIH/SUS</strong></td><td>Internações, CID, procedimentos, município</td><td>Por AIH, sem pessoa</td><td>C6</td><td>Uso em morbidade materna confirmado (via PCDaS), com ressalva de validade</td></tr>
+          <tr><td><strong>SIA/SUS</strong></td><td>Produção ambulatorial</td><td>A conferir</td><td>Exames e alta complexidade</td><td>Não confirmei utilidade para gestantes</td></tr>
+          <tr><td><strong>SISAB / e-Gestor</strong></td><td>Atenção primária, indicadores de pré-natal</td><td>Agregado</td><td>C5</td><td>Dados abertos sem cadastro confirmados. Indicadores podem estar sujeitos a manipulação (04/11)</td></tr>
+          <tr><td><strong>SISVAN</strong></td><td>Estado nutricional, ganho de peso gestacional</td><td>A conferir</td><td>Variáveis de contexto</td><td>Listado no OpenDataSUS</td></tr>
+          <tr><td><strong>SI-PNI</strong></td><td>Vacinação</td><td>Microdados por API desde 2020</td><td>Cobertura vacinal de gestante</td><td>Conforme documentação do healthbR</td></tr>
+          <tr><td><strong>CNES</strong></td><td>Estabelecimentos e equipes</td><td>Aberto até município; UBS e equipe restrito (04/11)</td><td>C2, C3, C5</td><td>Conforme reunião de 04/11</td></tr>
+          <tr><td><strong>IBGE</strong></td><td>Censo 2022, malhas, tipologia rural/urbana, API</td><td>Município e setor</td><td>C5, zona rural</td><td>API atualizada conforme reunião de 21/10</td></tr>
+          <tr><td><strong>IPEA: IVS / Atlas</strong></td><td>Vulnerabilidade social</td><td>Município; dado de 2017</td><td>C5</td><td>Plataforma com download confirmada. <strong>Não informa Bolsa Família individual</strong></td></tr>
+          <tr><td><strong>MDS: CadÚnico, Bolsa Família, BPC</strong></td><td>Benefícios sociais</td><td>Agregado aberto</td><td>C5</td><td>Conforme reunião de 21/10. Individual só via PEC</td></tr>
+          <tr><td><strong>PNS / Nascer no Brasil</strong></td><td>Inquéritos com pré-natal e parto</td><td>Amostra nacional</td><td>Referência externa</td><td>PNS lida pelo healthbR; Nascer no Brasil não confirmado</td></tr>
+          <tr><td><strong>CIDACS (100 Milhões)</strong></td><td>CadÚnico ligado a SINASC, SIM, SIH, SI-PNI</td><td>Individual, <strong>restrito</strong></td><td>C7</td><td>Conteúdo confirmado; forma de acesso, não</td></tr>
+          <tr><td><strong>SPNeoDeath</strong></td><td>SINASC + SIM, São Paulo, 2012–2018, 1,4 milhão</td><td>Por nascimento, CC BY</td><td>C8</td><td>Artigo em Data in Brief confirmado</td></tr>
+        </tbody>
+      </table></div>
+      <p class="prose"><strong>Atalhos de acesso:</strong> OpenDataSUS (30 conjuntos), PCDaS/Fiocruz, TabNet, e os pacotes R <code>microdatasus</code> (usado por Ramos) e <code>healthbR</code>. Antes de baixar qualquer coisa, perguntar ao WP1 o que já está nas camadas silver e gold.</p>
+      <p class="prose"><strong>Dados dos hospitais:</strong> segundo a reunião, o que vai para as bases públicas sai do próprio hospital, que também pode fornecer esses dados. Isso ajuda a validar SINASC e SIH com a realidade do HU.</p>
+    </section>
+
+    <section id="possibilidades">
+      <span class="eyebrow">Seção 7</span>
+      <h2>Todas as possibilidades</h2>
+      <p class="prose">São 42 frentes. Estão aqui para que a decisão seja tomada com tudo à vista, não para que tudo seja feito. O parecer de cada uma é minha sugestão, a discutir. Filtre por parecer:</p>
+      <div class="filters" role="group" aria-label="Filtrar por parecer">
+        <button type="button" id="f-all" class="fbtn on" data-f="all">Todas <span class="c">42</span></button>
+<button type="button" id="f-agora" class="fbtn" data-f="agora">Fazer agora <span class="c">10</span></button>
+<button type="button" id="f-par" class="fbtn" data-f="par">Em paralelo <span class="c">11</span></button>
+<button type="button" id="f-dep" class="fbtn" data-f="dep">Depois <span class="c">9</span></button>
+<button type="button" id="f-fut" class="fbtn" data-f="fut">Futuro <span class="c">5</span></button>
+<button type="button" id="f-nao" class="fbtn" data-f="nao">Não priorizar <span class="c">7</span></button>
+</div>
+<div class="axis"><h3>A. Contrarreferência e continuidade do cuidado</h3><p class="note">O objetivo central do WP3.</p><div class="tw"><table class="poss"><thead><tr><th>#</th><th>Possibilidade e pergunta</th><th>Dados</th><th>Acesso</th><th>Parecer</th></tr></thead><tbody>
+<tr data-st="agora"><td class="n"><strong>A1</strong></td><td><strong>Linkage em Rio Largo (E1)</strong><br><span class="q">Que fração é encontrada nas bases? Quem volta à APS?</span></td><td>GESTAR, PEC, AGHU</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-agora">Fazer agora</span><span class="q block">Núcleo da proposta.</span></td></tr>
+<tr data-st="dep"><td class="n"><strong>A2</strong></td><td><strong>Extensão para Branquinha e outros municípios</strong><br><span class="q">O método funciona em outro lugar?</span></td><td>GESTAR, PEC de cada município</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-dep">Depois</span><span class="q block">Só com A1 aprovado no critério de avanço.</span></td></tr>
+<tr data-st="agora"><td class="n"><strong>A3</strong></td><td><strong>Encaminhamento efetivo (T1)</strong><br><span class="q">A gestante de alto risco chegou ao hospital?</span></td><td>GESTAR, AGHU, regulação (SISREG, a confirmar)</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-agora">Fazer agora</span><span class="q block">Mesma extração de A1. Dalal e Khetan mostram essa lacuna.</span></td></tr>
+<tr data-st="agora"><td class="n"><strong>A4</strong></td><td><strong>Puerpério e continuum completo</strong><br><span class="q">Quem faz a consulta em até 42 dias?</span></td><td>AGHU ou SINASC, PEC</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-agora">Fazer agora</span><span class="q block">Desfecho secundário de A1. Adapta o continuum de Noor ao SUS.</span></td></tr>
+<tr data-st="dep"><td class="n"><strong>A5</strong></td><td><strong>Modelo de risco de não retorno</strong><br><span class="q">Dá para prever quem não volta?</span></td><td>Coorte com linkage</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-dep">Depois</span><span class="q block">Precisa de 400 a 800 gestantes (hipótese de 30%).</span></td></tr>
+<tr data-st="agora"><td class="n"><strong>A6</strong></td><td><strong>Vigilância por regras</strong><br><span class="q">Quem está sem ação há mais de 30 dias?</span></td><td>GESTAR (data de corte e observações)</td><td><span class="acc">Já temos</span></td><td><span class="st st-agora">Fazer agora</span><span class="q block">Sem ML. Vira o agente e o painel iniciais do P4.</span></td></tr>
+<tr data-st="dep"><td class="n"><strong>A7</strong></td><td><strong>Coorte prospectiva com TCLE (E4)</strong><br><span class="q">O que explica a perda, com dados que nenhuma base tem?</span></td><td>Coleta própria no hospital</td><td><span class="acc">TCLE</span></td><td><span class="st st-dep">Depois</span><span class="q block">Depois de E1, que fornece desfecho e n.</span></td></tr>
+<tr data-st="dep"><td class="n"><strong>A8</strong></td><td><strong>Estudo qualitativo de barreiras</strong><br><span class="q">Por que a gestante não volta?</span></td><td>Entrevistas com gestantes, ACS e enfermagem</td><td><span class="acc">TCLE</span></td><td><span class="st st-dep">Depois</span><span class="q block">Barato e publicável. Explica o que os modelos não mostram.</span></td></tr>
+<tr data-st="fut"><td class="n"><strong>A9</strong></td><td><strong>Busca ativa otimizada</strong><br><span class="q">Quem contatar, quando e como?</span></td><td>Alertas + registros de contato</td><td><span class="acc">TCLE</span></td><td><span class="st st-fut">Futuro</span><span class="q block">Bandits exigem canal de contato e volume.</span></td></tr>
+<tr data-st="fut"><td class="n"><strong>A10</strong></td><td><strong>Piloto de alerta nas UBS</strong><br><span class="q">O alerta aumenta o retorno?</span></td><td>Stepped wedge entre UBS, com WP8</td><td><span class="acc">TCLE</span></td><td><span class="st st-fut">Futuro</span><span class="q block">É o teste real de impacto e fecha o ciclo do projeto.</span></td></tr>
+<tr data-st="fut"><td class="n"><strong>A11</strong></td><td><strong>Efeito causal da perda no desfecho</strong><br><span class="q">Perder o seguimento piora o desfecho?</span></td><td>Coorte grande com linkage (target trial emulation)</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-fut">Futuro</span><span class="q block">Exige volume e confundidores bem medidos.</span></td></tr>
+</tbody></table></div></div>
+<div class="axis"><h3>B. Predição clínica</h3><p class="note">Frente da Rebeca e dos agentes preditivos.</p><div class="tw"><table class="poss"><thead><tr><th>#</th><th>Possibilidade e pergunta</th><th>Dados</th><th>Acesso</th><th>Parecer</th></tr></thead><tbody>
+<tr data-st="par"><td class="n"><strong>B1</strong></td><td><strong>ML versus pontuação do GESTAR (E3)</strong><br><span class="q">O ML supera o escore de pontos atual?</span></td><td>AGHU, GESTAR</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">Depende do AGHU e do pool de CIDs.</span></td></tr>
+<tr data-st="dep"><td class="n"><strong>B2</strong></td><td><strong>Escore simplificado</strong><br><span class="q">Quais dos 68 fatores de risco realmente importam?</span></td><td>GESTAR + rótulo do AGHU</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-dep">Depois</span><span class="q block">Uma regra simples pode valer mais que um modelo caixa-preta para a APS.</span></td></tr>
+<tr data-st="par"><td class="n"><strong>B3</strong></td><td><strong>Só variáveis clínicas versus Barcelona</strong><br><span class="q">Quanto se perde sem PlGF e Doppler?</span></td><td>Subgrupo avaliado (144 com resultado no baseline)</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">Subgrupo muito pequeno hoje. Dentro de E3.</span></td></tr>
+<tr data-st="par"><td class="n"><strong>B4</strong></td><td><strong>Escalada de risco entre triagens</strong><br><span class="q">Quem sobe para alto risco?</span></td><td>GESTAR: 76 de 268 elegíveis (28%)</td><td><span class="acc">Já temos</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">É hoje o único evento da série temporal com volume. Rótulo sujeito ao bug de automarcação de 21/10. Só exploratório.</span></td></tr>
+<tr data-st="dep"><td class="n"><strong>B5</strong></td><td><strong>Sinais de gravidade (MUSE)</strong><br><span class="q">Os 8 parâmetros antecipam a deterioração?</span></td><td>Campos novos, opcionais, na triagem</td><td><span class="acc">Já temos</span></td><td><span class="st st-dep">Depois</span><span class="q block">Começa a coletar agora; analisar quando houver dados. Confirmar a sigla e a lista de campos.</span></td></tr>
+<tr data-st="par"><td class="n"><strong>B6</strong></td><td><strong>Transmissão vertical</strong><br><span class="q">Quem tem risco de sífilis e HIV sem tratamento adequado?</span></td><td>GESTAR (VDRL reagente em 62), SINAN</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">Coordenar com a proposta 15665 do cluster.</span></td></tr>
+<tr data-st="par"><td class="n"><strong>B7</strong></td><td><strong>Prematuridade e baixo peso</strong><br><span class="q">Dá para prever no início do pré-natal?</span></td><td>SINASC</td><td><span class="acc">Aberto</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">Há literatura extensa. Bom para testar o pipeline.</span></td></tr>
+<tr data-st="nao"><td class="n"><strong>B8</strong></td><td><strong>Cesárea</strong><br><span class="q">Quem terá cesárea?</span></td><td>GESTAR: 110 de 188; SINASC</td><td><span class="acc">Aberto</span></td><td><span class="st st-nao">Não priorizar</span><span class="q block">Tem eventos, mas não se alinha ao objetivo do projeto.</span></td></tr>
+<tr data-st="nao"><td class="n"><strong>B9</strong></td><td><strong>Imagem de ultrassom</strong><br><span class="q">O exame ajuda na predição?</span></td><td>Sem base disponível</td><td><span class="acc">Restrito</span></td><td><span class="st st-nao">Não priorizar</span><span class="q block">Descartado por ora na reunião.</span></td></tr>
+</tbody></table></div></div>
+<div class="axis"><h3>C. Base populacional e território</h3><p class="note">O que dá para fazer com bases abertas, combinado com o WP1.</p><div class="tw"><table class="poss"><thead><tr><th>#</th><th>Possibilidade e pergunta</th><th>Dados</th><th>Acesso</th><th>Parecer</th></tr></thead><tbody>
+<tr data-st="agora"><td class="n"><strong>C1</strong></td><td><strong>Pré-natal inadequado no início (E2)</strong><br><span class="q">Quem terá pré-natal inadequado?</span></td><td>SINASC</td><td><span class="acc">Aberto</span></td><td><span class="st st-agora">Fazer agora</span><span class="q block">Sem CEP (confirmar). Gera o pipeline e o baseline.</span></td></tr>
+<tr data-st="par"><td class="n"><strong>C2</strong></td><td><strong>Óbito neonatal evitável em Alagoas</strong><br><span class="q">O modelo de Ramos se sustenta no estado?</span></td><td>SINASC, SIM, CNES</td><td><span class="acc">Aberto</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">Replicação regional com auditoria de equidade.</span></td></tr>
+<tr data-st="agora"><td class="n"><strong>C3</strong></td><td><strong>Fluxo do parto entre municípios</strong><br><span class="q">As gestantes parem onde a referência manda?</span></td><td>SINASC: município de residência × nascimento e estabelecimento</td><td><span class="acc">Aberto</span></td><td><span class="st st-agora">Fazer agora</span><span class="q block"><strong>Único proxy aberto de rede de referência.</strong> Barato e novo para Alagoas.</span></td></tr>
+<tr data-st="dep"><td class="n"><strong>C4</strong></td><td><strong>Impacto do GESTAR nos indicadores</strong><br><span class="q">Municípios com GESTAR melhoraram?</span></td><td>SINASC + datas de implantação por município</td><td><span class="acc">Aberto</span></td><td><span class="st st-dep">Depois</span><span class="q block">Difference-in-differences. Poucos municípios e pouco tempo por enquanto.</span></td></tr>
+<tr data-st="par"><td class="n"><strong>C5</strong></td><td><strong>Mapa de vulnerabilidade e acesso</strong><br><span class="q">Onde vulnerabilidade e pré-natal ruim coincidem?</span></td><td>SINASC, IVS, CadÚnico agregado, CNES, IBGE</td><td><span class="acc">Aberto</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">Apoia a priorização. Dialoga com os indicadores territoriais do WP1.</span></td></tr>
+<tr data-st="agora"><td class="n"><strong>C6</strong></td><td><strong>Morbidade materna por CID em Alagoas</strong><br><span class="q">Quais doenças são mais frequentes?</span></td><td>SIH/SUS</td><td><span class="acc">Aberto</span></td><td><span class="st st-agora">Fazer agora</span><span class="q block">Resposta rápida para o pool de CIDs da Rebeca. Apenas contagens; o SIH tem validade limitada para morbidade.</span></td></tr>
+<tr data-st="fut"><td class="n"><strong>C7</strong></td><td><strong>Dados vinculados do CIDACS</strong><br><span class="q">Como a vulnerabilidade individual afeta o desfecho?</span></td><td>Coorte de 100 Milhões (CadÚnico + SINASC + SIM + SIH)</td><td><span class="acc">Restrito</span></td><td><span class="st st-fut">Futuro</span><span class="q block">Maior ganho social. Processo de acesso não confirmado; Fiocruz pode ajudar.</span></td></tr>
+<tr data-st="nao"><td class="n"><strong>C8</strong></td><td><strong>Benchmark em base pronta</strong><br><span class="q">O pipeline roda bem?</span></td><td>SPNeoDeath (São Paulo)</td><td><span class="acc">Aberto</span></td><td><span class="st st-nao">Não priorizar</span><span class="q block">Útil só se o SINASC atrasar. Não é contribuição científica.</span></td></tr>
+<tr data-st="nao"><td class="n"><strong>C9</strong></td><td><strong>Reutilizar dados de artigos estrangeiros</strong><br><span class="q">Modelos de fora servem aqui?</span></td><td>DHS, bases dos artigos</td><td><span class="acc">Aberto</span></td><td><span class="st st-nao">Não priorizar</span><span class="q block">Contexto diferente, como observado na reunião.</span></td></tr>
+<tr data-st="nao"><td class="n"><strong>C10</strong></td><td><strong>Calculadora pública</strong><br><span class="q">Como é o perfil de quem faz autotriagem?</span></td><td>Triagens sem identificação</td><td><span class="acc">Já temos</span></td><td><span class="st st-nao">Não priorizar</span><span class="q block">Sem desfecho, sem link, autorrelato. Apenas descritivo, após o lançamento.</span></td></tr>
+<tr data-st="nao"><td class="n"><strong>C11</strong></td><td><strong>Vida da mulher após a gestação</strong><br><span class="q">Ela continua estudando e trabalhando?</span></td><td>Nenhuma base aberta individual identificada</td><td><span class="acc">Restrito</span></td><td><span class="st st-nao">Não priorizar</span><span class="q block">Estacionar. Só viável por vínculo tipo CIDACS.</span></td></tr>
+<tr data-st="nao"><td class="n"><strong>C12</strong></td><td><strong>Esperar o GESTAR amadurecer</strong><br><span class="q">O volume resolve sozinho?</span></td><td>GESTAR em 5 a 6 meses</td><td><span class="acc">Já temos</span></td><td><span class="st st-nao">Não priorizar</span><span class="q block">~1.000 gestantes não bastam, e o registro de parto continua falho.</span></td></tr>
+</tbody></table></div></div>
+<div class="axis"><h3>D. Dados, interoperabilidade e IA</h3><p class="note">Exigidos pelo P4 ou publicáveis por conta própria.</p><div class="tw"><table class="poss"><thead><tr><th>#</th><th>Possibilidade e pergunta</th><th>Dados</th><th>Acesso</th><th>Parecer</th></tr></thead><tbody>
+<tr data-st="agora"><td class="n"><strong>D1</strong></td><td><strong>Auditoria de qualidade e dataset card</strong><br><span class="q">Quão confiável é o GESTAR?</span></td><td>Auditoria da Lara + achados da seção 3</td><td><span class="acc">Já temos</span></td><td><span class="st st-agora">Fazer agora</span><span class="q block">Corrige Apgar e pré-eclâmpsia. Dataset card é entrega prevista.</span></td></tr>
+<tr data-st="agora"><td class="n"><strong>D2</strong></td><td><strong>Feature store e mapeamento FHIR</strong><br><span class="q">Como unificar GESTAR, PEC e AGHU?</span></td><td>Planilha de features + ambiente de teste do AGHU</td><td><span class="acc">Já temos</span></td><td><span class="st st-agora">Fazer agora</span><span class="q block">Item obrigatório do P4.</span></td></tr>
+<tr data-st="agora"><td class="n"><strong>D3</strong></td><td><strong>RNDS versus banco do PEC</strong><br><span class="q">O que se perde usando a RNDS?</span></td><td>Homologação RNDS, PEC de Rio Largo</td><td><span class="acc">Já temos</span></td><td><span class="st st-agora">Fazer agora</span><span class="q block">Decide se a escala depende de convênio. Estudo técnico publicável.</span></td></tr>
+<tr data-st="par"><td class="n"><strong>D4</strong></td><td><strong>LLM para mapear esquema</strong><br><span class="q">Um LLM acelera o mapeamento das 1.183 tabelas do PEC?</span></td><td>Só esquema, sem dado de paciente</td><td><span class="acc">Já temos</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">RQ atual, sem risco de privacidade.</span></td></tr>
+<tr data-st="dep"><td class="n"><strong>D5</strong></td><td><strong>LLM em texto livre</strong><br><span class="q">Dá para extrair rótulos e variáveis ausentes?</span></td><td>Evoluções do PEC, observações do GESTAR</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-dep">Depois</span><span class="q block">A aplicação mais promissora de LLM. Exige modelo local ou contrato adequado.</span></td></tr>
+<tr data-st="par"><td class="n"><strong>D6</strong></td><td><strong>LLM versus ML clássico em dados tabulares</strong><br><span class="q">O LLM agrega valor em dados estruturados?</span></td><td>Mesma base de E3</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">RQ da reunião. A evidência favorece modelos clássicos.</span></td></tr>
+<tr data-st="par"><td class="n"><strong>D7</strong></td><td><strong>RAG sobre protocolos</strong><br><span class="q">O agente responde com base nas diretrizes?</span></td><td>Protocolos do MS e documento de estratificação</td><td><span class="acc">Aberto</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">Compromisso do P4 e sem dado de paciente, se bem delimitado.</span></td></tr>
+<tr data-st="dep"><td class="n"><strong>D8</strong></td><td><strong>XAI validada com clínicos</strong><br><span class="q">A explicação ajuda quem decide?</span></td><td>Modelo + equipe do HU e das UBS, com WP8</td><td><span class="acc">TCLE</span></td><td><span class="st st-dep">Depois</span><span class="q block">Precisa de modelo antes.</span></td></tr>
+<tr data-st="fut"><td class="n"><strong>D9</strong></td><td><strong>Federated learning</strong><br><span class="q">Dá para treinar sem centralizar dados?</span></td><td>Municípios e WPs, com WP6</td><td><span class="acc">Restrito</span></td><td><span class="st st-fut">Futuro</span><span class="q block">Coerente com a rede, mas só faz sentido com vários centros.</span></td></tr>
+<tr data-st="par"><td class="n"><strong>D10</strong></td><td><strong>Comparação de métodos de linkage</strong><br><span class="q">Hash exato ou linkage probabilístico tolerante a erros?</span></td><td>Amostra de A1 auditada</td><td><span class="acc">CEP + autorização</span></td><td><span class="st st-par">Em paralelo</span><span class="q block">Complemento metodológico barato de A1.</span></td></tr>
+</tbody></table></div></div>
+<h3>Como dividir na equipe agora</h3>
+      <div class="tw"><table><thead><tr><th>Frente (29/10)</th><th>Possibilidades que assume</th></tr></thead><tbody>
+      <tr><td>Tarcísio: Rio Largo</td><td>A1, A3, A4, com D3</td></tr>
+      <tr><td>Yuki e Caio: AGHU</td><td>D2 e campos de A1 e B1</td></tr>
+      <tr><td>Bases públicas</td><td>C1, C3, C6, depois de falar com o WP1</td></tr>
+      <tr><td>Rebeca</td><td>C6 para escolher os CIDs, depois B1 e B3</td></tr>
+      <tr><td>Lara</td><td>D1</td></tr>
+      <tr><td>Rodrigo</td><td>D3, A6, este desenho</td></tr>
+      </tbody></table></div>
+      <p class="note">Divisão sugerida a partir das tarefas de 29/10 e 22/10; a alocação é da equipe.</p>
+      <p class="note">Gap de triagem medido para A6: 419 de 768 intervalos acima de 30 dias; 225 das 399 gestantes com 2+ triagens tiveram gap acima de 45 dias. A6 mede ação no sistema, não cuidado, e precisa da data de corte e das observações, que estão fora do dataset anonimizado.</p>
+    </section>
+
+    <section id="linkage">
+      <span class="eyebrow">Seção 8</span>
+      <h2>Linkage, privacidade e CEP</h2>
+      <p class="prose">Na reunião, surgiu a objeção: ao sair do hospital, perde-se o vínculo; e, se conseguirmos vincular, é porque a anonimização foi feita errado. As duas questões se resolvem separando quem liga de quem analisa.</p>
+      <div class="flow">
+        <div class="fbox"><b>Bases de origem</b><span>GESTAR · PEC · AGHU</span><span class="small">Com CPF/CNS</span></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="fbox key"><b>Honest broker</b><span>TI ou responsável designado aplica o mesmo hash com chave secreta (HMAC) a todas as bases.</span><span class="small">A chave nunca sai daqui</span></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="fbox"><b>Equipe de pesquisa</b><span>Recebe código e variáveis, com datas convertidas em intervalos.</span><span class="small">Sem CPF/CNS</span></div>
+      </div>
+      <ol class="steps">
+        <li>A mesma pessoa recebe o <strong>mesmo código</strong> em GESTAR, PEC e AGHU, o que um hash separado por instituição não permitiria.</li>
+        <li>O GESTAR já tem <code>cpf_hash</code>, o que pode facilitar, mas é preciso conferir se o método serve para o cruzamento.</li>
+        <li>Isso é <strong>pseudonimização, não anonimização</strong>: pela LGPD ainda são dados pessoais. O protocolo deve dizer isso e não repetir o “irreversível” e o “100%” do README atual. Município com poucos casos, somado a intervalos exatos, ainda permite reidentificar; adotar um tamanho mínimo de célula ao publicar.</li>
+      </ol>
+      <p class="prose"><strong>Proposta para o CEP:</strong> manter a submissão do GESTAR, que já está pronta, e tratar o resto como um protocolo guarda-chuva único de linkage retrospectivo (E1 e E3), com instituições coparticipantes e pedido justificado de dispensa de TCLE. O E4 entra como emenda ou protocolo próprio. Isso responde ao receio de abrir vários CEPs, mas é preciso <strong>confirmar com o comitê</strong> a instância competente, se o CEP do GESTAR já cobre o cruzamento e a base legal do vínculo com o AGHU. Também precisamos do termo de cooperação com a Secretaria, já citado em 26/10.</p>
+      <p class="prose"><strong>Atenção ao instrumento jurídico:</strong> a minuta diz que a UFRN é a executora formal e que SESAU, HU e outras colaboradoras não são partícipes. Qualquer uso de dados dessas instituições “dependerá de autorização própria, instrumento específico ou aprovação institucional”. O mesmo vale para o PEC dos municípios. Isso precisa entrar no plano antes do CEP.</p>
+    </section>
+
+    <section id="metodo">
+      <span class="eyebrow">Seção 9</span>
+      <h2>Regras comuns de método</h2>
+      <p class="prose">Estas regras substituem pontos do deck de outubro (<code>Estudo_Design_Artigos_WP3_SOFIA</code>).</p>
+      <div class="tw"><table>
+        <thead><tr><th>Deck de outubro</th><th>Proposta</th><th>Motivo</th></tr></thead>
+        <tbody>
+          <tr><td>SMOTE no pré-processamento</td><td>Sem reamostragem; ajustar o limiar</td><td>SMOTE piora a calibração e não melhora AUC (van den Goorbergh et al., 2022). Em risco clínico, a probabilidade precisa estar correta.</td></tr>
+          <tr><td>Acurácia e AUC-ROC como metas</td><td>AUROC, PR-AUC, <strong>calibração</strong> e decision curve analysis, sempre com IC</td><td>Acurácia engana em desfecho desbalanceado. A decision curve analysis mostra se o alerta compensa a ação.</td></tr>
+          <tr><td>10-fold estratificado</td><td>Divisão temporal e por município, com bootstrap ou nested cross-validation</td><td>Agrupar por gestante e testar em outro período mede a transportabilidade real.</td></tr>
+          <tr><td>Boruta sobre centenas de campos</td><td>Pré-selecionar por relevância clínica e disponibilidade, com regressão penalizada como baseline</td><td>A seleção de variáveis em base pequena gera instabilidade; o limite é o cálculo amostral.</td></tr>
+          <tr><td>Alerta com score acima de 0,70</td><td>Limiar definido pela capacidade de busca ativa e pela utilidade clínica</td><td>O valor 0,70 é arbitrário e depende da calibração.</td></tr>
+          <tr><td>Target “evasão na contrarreferência” no GESTAR</td><td>Só com linkage (E1)</td><td>O GESTAR sozinho não observa o retorno.</td></tr>
+        </tbody>
+      </table></div>
+      <ul class="plain">
+        <li><strong>Baseline obrigatório:</strong> regressão logística penalizada antes de XGBoost e LightGBM. Dados ausentes por imputação múltipla, ajustada só no treino, e auditoria de fairness por raça/cor e município.</li>
+        <li><strong>Diretrizes de relato:</strong> TRIPOD+AI para os modelos, RECORD para dados coletados rotineiramente e linkage. PROBAST+AI como checagem interna. Protocolo no formato PICOTS, que também responde à pergunta da reunião sobre o PICO.</li>
+        <li><strong>Correções no deck de outubro:</strong> Yoseph et al. aparece com N = 1.200, mas o artigo reporta 3.855. Mlandu et al. aparece com Uganda e Gradient Boosting, mas a matriz da Lara registra RD Congo, Quênia e Tanzânia, com Random Forest. “Fiocruz/LABDAPS, BMC Public Health, N &gt; 1,5 milhão” corresponde na matriz a Ramos et al., <em>Population Health Metrics</em>, com 8,8 milhões. Reconferir o resto antes de reaproveitar.</li>
+      </ul>
+    </section>
+
+    <section id="decisoes">
+      <span class="eyebrow">Seção 10</span>
+      <h2>Decisões para a próxima reunião</h2>
+      <div class="tw"><table>
+        <thead><tr><th>#</th><th>Decisão</th><th>Minha sugestão</th></tr></thead>
+        <tbody>
+          <tr><td class="n">1</td><td>O desfecho principal do projeto é a contrarreferência, como definida na seção 4?</td><td>Sim. Equipe clínica valida janelas e o que conta como contato.</td></tr>
+          <tr><td class="n">2</td><td>Aceitamos um artigo metodológico sem ML como primeira entrega?</td><td>Sim. Os resultados atuais do artigo seguem pausados e não devem ser usados.</td></tr>
+          <tr><td class="n">3</td><td>O hospital de referência inclui só o HU ou também a Santa Mônica?</td><td>Só o HU em E1, pois a Santa Mônica não tem acesso mapeado. Confirmar destino de Rio Largo.</td></tr>
+          <tr><td class="n">4</td><td>Como organizar os CEPs?</td><td>GESTAR sai agora; guarda-chuva para linkage; E4 separado.</td></tr>
+          <tr><td class="n">5</td><td>E3 busca substituir Barcelona ou predizer só com variáveis clínicas?</td><td>Variáveis clínicas, até haver marcadores. Rever após ler o paper citado.</td></tr>
+          <tr><td class="n">6</td><td>Quem faz as bases públicas: nós ou o WP1?</td><td>Falar com UFRN e UFC antes. Nós definimos as perguntas (C1, C3, C6), e reaproveitamos o ETL deles se existir.</td></tr>
+          <tr><td class="n">7</td><td>O que conta como “agente preditivo operacional” no P4?</td><td>Alinhar com a coordenação que vigilância por regras e escore atual são a primeira versão, e o modelo vem quando os dados permitirem.</td></tr>
+          <tr><td class="n">8</td><td>Quais possibilidades da seção 7 entram no plano?</td><td>As marcadas “Fazer agora”; o resto fica como carteira.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>O que cada frente precisa trazer</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Frente (reunião de 29/10)</th><th>Ajuste proposto para alimentar este desenho</th></tr></thead>
+        <tbody>
+          <tr><td>Tarcísio: Rio Largo</td><td>Rodar as RQ1 e RQ3 de E1 nas 78. Registrar também campos de atendimento e data de corte do PEC, que definem o desfecho.</td></tr>
+          <tr><td>Yuki e Caio: AGHU</td><td>Além das features, localizar os campos de <strong>alta, último atendimento, CID e município</strong>. São os que definem o evento índice.</td></tr>
+          <tr><td>Bases públicas</td><td>Confirmar variáveis e cobertura do SINASC para Alagoas (Kotelchuck, início do pré-natal), acesso ao SIM e granularidade de IBGE, IPEA e MDS.</td></tr>
+          <tr><td>Rebeca</td><td>Trazer o pool de CIDs com contagem real, os artigos da calculadora e o paper citado na reunião.</td></tr>
+          <tr><td>Base GESTAR</td><td>Corrigir Apgar = 0 e <code>rf_pre_eclampsia</code>, conciliar 1.113 × 1.184 e 188 × 27, e extrair data de corte e observações. Junta-se à apuração de inconsistências de 22/10.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="aberto">
+      <span class="eyebrow">Seção 11</span>
+      <h2>Pontos em aberto nesta proposta</h2>
+      <ul class="plain">
+        <li><strong>Transcrição imprecisa.</strong> A identificação de falantes falha e alguns nomes vieram distorcidos. “JAV/JAB” não foi identificado com segurança; tratei como LLM de uso geral. “H1” foi lido como HU, e “SISEG” pode ser SISREG. Se SISREG for acessível, é a fonte natural de T1.</li>
+        <li><strong>Dataset de outubro.</strong> Os números vêm do dataset anonimizado, não do banco atual. As contagens de Rio Largo devem mudar um pouco.</li>
+        <li><strong>Literatura.</strong> A busca foi rápida e baseada em resumos, não uma revisão sistemática. Ainda não confirmei as entradas exatas da calculadora Barcelona, nem a codificação do Kotelchuck no dicionário oficial do SINASC.</li>
+        <li><strong>Minuta do SOFIA.</strong> O PDF é escaneado e foi lido por OCR; conferir citações literais antes de reaproveitá-las. A proposta 15545 é ligada ao WP3 por tema e por instituição (a lista do cluster não faz essa associação de forma explícita).</li>
+        <li><strong>Minhas suposições, não decisões da reunião:</strong> janelas de 30 e 42 dias, critérios de avanço de E1, R² e taxa de 30% do cálculo amostral, estrutura de CEP, pareceres da seção 7.</li>
+      </ul>
+      <h3>Fontes externas</h3>
+      <ul class="src-list">
+        <li><a href="https://cran.r-project.org/web/packages/pmsampsize/refman/pmsampsize.html">Riley et al. / pacote pmsampsize (CRAN)</a></li>
+        <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9382395/">van den Goorbergh et al., 2022. Correções de desbalanceamento</a></li>
+        <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11025451/">Collins et al., 2024. TRIPOD+AI</a></li>
+        <li><a href="https://pubmed.ncbi.nlm.nih.gov/37698356/">Gil et al. ML em pré-eclâmpsia, coorte PREVAL</a></li>
+        <li><a href="https://bohrium.dp.tech/paper/arxiv/865006000539697339">Nguyen-Hoang et al., 2024. População asiática</a></li>
+        <li><a href="https://www.mdpi.com/2075-4418/16/10/1540">Cristofor et al. ML versus FMF, coorte romena</a></li>
+        <li><a href="https://arxiv.org/pdf/2511.00782">Benchmark: contagem contra LLM em EHR estruturado</a></li>
+        <li><a href="https://scholars.mssm.edu/en/publications/large-language-models-versus-classical-machine-learning-performan/">LLM versus ML clássico em mortalidade por COVID-19</a></li>
+        <li><a href="https://rdrr.io/github/ki-tools/cidacsdict/f/README.md">Dicionário CIDACS para variáveis do SINASC</a></li>
+        <li><a href="https://doi.org/10.1186/s12963-025-00420-x">Ramos et al., 2025. Óbito neonatal evitável no Brasil</a></li>
+        <li><a href="https://doi.org/10.1186/s12911-023-02305-1">Mlandu et al., 2023. Dropout no continuum</a></li>
+        <li><a href="https://doi.org/10.1016/j.array.2025.100666">Noor et al., 2026. Continuum em Bangladesh</a></li>
+        <li><a href="https://www.gov.br/saude/pt-br/acesso-a-informacao/sic/dados-em-transparencia-ativa/svsa/mortalidade">Ministério da Saúde: microdados do SIM</a></li>
+        <li><a href="https://www.gov.br/saude/pt-br/acesso-a-informacao/sic/dados-em-transparencia-ativa/svsa/agravos-de-notificacoes">Ministério da Saúde: microdados do SINAN</a></li>
+        <li><a href="https://cran.r-project.org/web/packages/healthbR/index.html">Pacote healthbR (DATASUS e PNS)</a></li>
+        <li><a href="https://www.scielo.br/j/csp/a/B4fvNfjqNCVJHZpfV5sxFGb/?lang=pt">Morbidade materna com SIH, SINASC e CNES</a></li>
+        <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7419335/">SPNeoDeath, São Paulo, 2012–2018</a></li>
+        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7382864">Coorte de 100 Milhões de Brasileiros</a></li>
+        <li><a href="https://www.icict.fiocruz.br/sites/www.icict.fiocruz.br/files/Atlas%20Vulnerabilidade%20Social%20IPEA.pdf">Atlas da Vulnerabilidade Social, IPEA</a></li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.index a'));
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (a) { a.classList.remove('on'); });
+        if (map[e.target.id]) map[e.target.id].classList.add('on');
+      }
+    });
+  }, { rootMargin: '-15% 0px -75% 0px' });
+  Object.keys(map).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+})();
+
+(function () {
+  var btns = Array.prototype.slice.call(document.querySelectorAll('.fbtn'));
+  var rows = Array.prototype.slice.call(document.querySelectorAll('tr[data-st]'));
+  var axes = Array.prototype.slice.call(document.querySelectorAll('.axis'));
+  btns.forEach(function (b) {
+    b.setAttribute('aria-pressed', b.classList.contains('on') ? 'true' : 'false');
+    b.addEventListener('click', function () {
+      var f = b.getAttribute('data-f');
+      btns.forEach(function (x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+      rows.forEach(function (r) { r.hidden = !(f === 'all' || r.getAttribute('data-st') === f); });
+      axes.forEach(function (a) { a.hidden = !a.querySelector('tr[data-st]:not([hidden])'); });
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

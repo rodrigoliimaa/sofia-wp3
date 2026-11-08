@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rede SOFIA WP3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: capa da wiki. Missão no topo, cartões para cada documento e mapa do que entra em cada seção. */
+:root{--bg:#f5f8f8;--surface:#fff;--tint:#e5f0ef;--ink:#17292d;--ink-2:#4a5f64;--ink-3:#6b7f84;--line:#d3dfe0;--accent:#0b6b63;--accent-ink:#fff;
+--display:"Bricolage Grotesque","Avenir Next","Segoe UI",sans-serif;--body:"Source Sans 3","Helvetica Neue",Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1a1c;--surface:#162427;--tint:#1b3235;--ink:#e6efef;--ink-2:#aebfc1;--ink-3:#8a9ea1;--line:#2b4044;--accent:#4fc2b4;--accent-ink:#08201e;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--body)}
+.wrap{max-width:1080px;margin:0 auto;padding-block:56px 72px;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));display:grid;gap:44px}
+@media (max-width:620px){.wrap{padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}h1{font-size:clamp(2.3rem,5.5vw,3.6rem);line-height:1.04;letter-spacing:-.02em}h2{font-size:1.5rem}h3{font-size:1.15rem;line-height:1.25}
+p{margin:0}a{color:var(--accent)}:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font:500 .75rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+header{display:grid;gap:14px}.lead{font-size:1.15rem;max-width:62ch;color:var(--ink-2)}
+.mission{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:6px;background:var(--surface);overflow:hidden}
+.mission div{padding:14px 16px;border-right:1px solid var(--line);display:grid;gap:3px;align-content:start}.mission div:last-child{border-right:0}
+.mission b{font:500 .74rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}.mission span{font-size:.97rem;line-height:1.4}
+.docs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.doc{display:grid;gap:8px;align-content:start;padding:18px;border:1px solid var(--line);border-radius:6px;background:var(--surface);text-decoration:none;color:inherit}
+.doc:hover{border-color:var(--accent)}.doc.main{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.doc .k{font:500 .74rem var(--mono);letter-spacing:.05em;text-transform:uppercase}.doc p{font-size:.97rem;line-height:1.45}
+.doc:not(.main) .k{color:var(--ink-3)}.doc:not(.main) p{color:var(--ink-2)}
+.shot{display:block;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#f5f8f8}.shot img{display:block;width:100%;height:auto}
+.map{border-collapse:collapse;width:100%;font-size:.97rem}.map td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}.map tr:last-child td{border-bottom:0}
+.map td:first-child{white-space:nowrap;width:1%}.mapw{border:1px solid var(--line);border-radius:6px;background:var(--surface);overflow-x:auto}
+.note{font-size:.92rem;color:var(--ink-3);max-width:75ch}
+@media (max-width:820px){.docs{grid-template-columns:minmax(0,1fr)}.mission{grid-template-columns:repeat(2,minmax(0,1fr))}.mission div:nth-child(2){border-right:0}.mission div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+@media (max-width:480px){.mission{grid-template-columns:minmax(0,1fr)}.mission div{border-right:0;border-bottom:1px solid var(--line)}.mission div:last-child{border-bottom:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <span class="eyebrow">Rede SOFIA · WP3 · UFAL</span>
+  <h1>Séries temporais clínicas e registros estruturados</h1>
+  <p class="lead">Wiki do WP3: desenho dos estudos e decisões da equipe. O foco do pacote é a contrarreferência de gestantes de alto risco entre o hospital e a atenção básica em Alagoas.</p>
+</header>
+<section class="mission" aria-label="Missão do WP3">
+  <div><b>Integrar</b><span>D3 e D4, a partir do NTS-AL e da SESAU-AL.</span></div>
+  <div><b>Padronizar</b><span>HL7 FHIR e interoperabilidade com e-SUS, RNDS e AGHU.</span></div>
+  <div><b>Estruturar</b><span>Feature store e contratos de dados para os agentes.</span></div>
+  <div><b>Ativar</b><span>Vigilância, predição, LLM/RAG e frontend de contrarreferência.</span></div>
+</section>
+<section style="display:grid;gap:14px">
+  <h2>Documentos</h2>
+  <div class="docs">
+    <a class="doc main" href="study-design/"><span class="k">Proposta para discussão</span><h3>Study design</h3><p>Objetivo do SOFIA, trabalhos anteriores, dados, estudos recomendados, bases abertas e 42 possibilidades.</p></a>
+    <a class="doc" href="study-design/#diagrama"><span class="k">Resumo visual</span><h3>O design em uma imagem</h3><p>As quatro trilhas, dos dados até a entrega P4 do mês 18.</p></a>
+  </div>
+</section>
+<a class="shot" href="study-design/#diagrama"><img src="study-design/diagrama.png" alt="Diagrama do study design do WP3, com as trilhas de contrarreferência, vigilância, doenças gestacionais e base populacional convergindo para a entrega P4 v1.0."></a>
+<section style="display:grid;gap:14px">
+  <h2>Atalhos</h2>
+  <div class="mapw"><table class="map"><tbody>
+    <tr><td><a href="study-design/#sofia">Objetivo do SOFIA</a></td><td>O que a minuta pede do WP3 e quem mais está envolvido.</td></tr>
+    <tr><td><a href="study-design/#dados">O que os dados sustentam</a></td><td>Achados no dataset GESTAR e tamanho amostral.</td></tr>
+    <tr><td><a href="study-design/#desfecho">Desfecho central</a></td><td>Definição computável de contrarreferência.</td></tr>
+    <tr><td><a href="study-design/#bases">Bases abertas</a></td><td>O que cada base pública permite e o que não permite.</td></tr>
+    <tr><td><a href="study-design/#possibilidades">Todas as possibilidades</a></td><td>Catálogo com dados, acesso e parecer.</td></tr>
+    <tr><td><a href="study-design/#decisoes">Decisões pendentes</a></td><td>O que a equipe precisa decidir na próxima reunião.</td></tr>
+  </tbody></table></div>
+</section>
+<p class="note">Última atualização do conteúdo: 8 de novembro de 2026. Dados de pacientes, credenciais e documentos contratuais não ficam neste repositório.</p>
+</div>
+</body>
+</html>
